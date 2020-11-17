@@ -6,9 +6,15 @@
 
 #IncludeRegexTransform: 
 
+/home/areckt/CLionProjects/AAL/include/hash.h
+
 /home/areckt/CLionProjects/AAL/src/main.cpp
 iostream
 -
 string
 -
+vector
+-
+../include/hash.h
+/home/areckt/CLionProjects/AAL/include/hash.h
 

@@ -6,19 +6,20 @@
 
 /*
  * UWAGI:
- * Slowo nie powinno byc dluzsze niz 13 znakow, trzeba to uwzglednic przy generowaniu losowych slow
+ * Słowo nie powinno byc dłuższe niż 13 znaków, trzeba to uwzględnić przy generowaniu losowych słów
+ * Powód jest taki, że przy 14 znakach hash jest zbyt duży i "przekręca" się na ujemne wartości
  */
 
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../include/hash.h"
+#include "../include/generator.h"
 
 using namespace std;
 
 #define PRIME 7
 
-long int hashFunction(string s){        // oblicza hash, zwraca k (jeszcze przed modulo TableSize)
+long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
     int g = 31;
     long int k = 0;
     for(char i : s){
@@ -27,10 +28,6 @@ long int hashFunction(string s){        // oblicza hash, zwraca k (jeszcze przed
 
     return k;
 }
-string generate(void);                  // generuje losowe słowa, zwraca s
-int insertToHashTable(string s, int k); // wstawia słowo s do tablicy na pozycji k
-
-
 
 int main(int argc, char *argv[]){
 
@@ -41,24 +38,6 @@ int main(int argc, char *argv[]){
     }
     */
 
-    /*
-    string HashTable[TableSize];
-    string sTemp;
-    int index;
-
-    for(int i = 0; i < TableSize; i++){
-        cout << "Type in word " << i+1 << endl;
-        cin >> sTemp;
-        index = hashFunction(sTemp);
-        cout << "Index in table: " << index << endl;
-        HashTable[index] = sTemp;
-    }
-
-    cout << "Zawartosc tabeli: " << endl;
-    for(int i = 0; i < TableSize; i++){
-        cout << "Na pozycji " << i << ": " << HashTable[i] << endl;
-    }
-    */
     int TableSize = 11;
 
     vector<string> hashTable (TableSize);
@@ -66,39 +45,39 @@ int main(int argc, char *argv[]){
     long int k;
     int k1;
 
+    // initialize vectors of probability for generator
+    vector<float> startProbability (26, 0); // prob of first letter in word
+    vector<vector<float>> nextProbability (26, vector<float>(27, 0));   // prob of letter after other letter
+
+    // main loop - inserting to the hashTable
     for(int i = 0; i < TableSize; i++){
-        s = generate();
+        s = generateWord(startProbability, nextProbability);
         k = hashFunction(s);
         k1 = (int)(k%TableSize);
 
-        insertToHashTable(s, k1);
         if(hashTable.at(k).length() != 0){  // if collision occurs
             int k2 = PRIME - (k % PRIME);
             int new_k;
-            for(int j = 1; ; j++){
+            for(int j = 1; true; j++){
                 new_k = (k1 + j*k2) % TableSize;
 
                 //check for collision
                 if(hashTable.at(new_k).length() == 0){
-                    insertToHashTable(s, new_k);
+                    hashTable.at(new_k) = s;
                     break;
                 }
             }
         }
         else{   // if no collision occurs
-            insertToHashTable(s, k1);
+            hashTable.at(k1) = s;
         }
     }
 
+    // print out content of hashTable
     for(const auto& i : hashTable){
         if(i.length() == 0) cout << "[-]" << endl;
+        else cout << i << endl;
     }
 
     return 0;
-}
-
-
-
-int insertToHashTable(string s, int k){
-    ;
 }

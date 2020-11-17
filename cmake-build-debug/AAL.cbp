@@ -84,6 +84,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/areckt/CLionProjects/AAL/src/generator.cpp">
+			<Option target="AAL"/>
+		</Unit>
 		<Unit filename="/home/areckt/CLionProjects/AAL/src/main.cpp">
 			<Option target="AAL"/>
 		</Unit>

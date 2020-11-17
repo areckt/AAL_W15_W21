@@ -1,1 +1,1 @@
-/usr/bin/c++  -g   CMakeFiles/AAL.dir/src/main.cpp.o  -o AAL 
+/usr/bin/c++  -g   CMakeFiles/AAL.dir/src/main.cpp.o CMakeFiles/AAL.dir/src/generator.cpp.o  -o AAL 

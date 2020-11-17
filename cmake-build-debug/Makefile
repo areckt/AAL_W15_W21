@@ -143,6 +143,33 @@ AAL/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/AAL.dir/build.make CMakeFiles/AAL.dir/build
 .PHONY : AAL/fast
 
+src/generator.o: src/generator.cpp.o
+
+.PHONY : src/generator.o
+
+# target to build an object file
+src/generator.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AAL.dir/build.make CMakeFiles/AAL.dir/src/generator.cpp.o
+.PHONY : src/generator.cpp.o
+
+src/generator.i: src/generator.cpp.i
+
+.PHONY : src/generator.i
+
+# target to preprocess a source file
+src/generator.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AAL.dir/build.make CMakeFiles/AAL.dir/src/generator.cpp.i
+.PHONY : src/generator.cpp.i
+
+src/generator.s: src/generator.cpp.s
+
+.PHONY : src/generator.s
+
+# target to generate assembly for a file
+src/generator.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/AAL.dir/build.make CMakeFiles/AAL.dir/src/generator.cpp.s
+.PHONY : src/generator.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -179,6 +206,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... AAL"
+	@echo "... src/generator.o"
+	@echo "... src/generator.i"
+	@echo "... src/generator.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

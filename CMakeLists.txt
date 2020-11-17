@@ -4,4 +4,4 @@ project(AAL)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(AAL
-        src/main.cpp)
+        src/main.cpp src/generator.cpp)
