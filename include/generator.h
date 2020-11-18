@@ -8,8 +8,8 @@
 #define AAL_GENERATOR_H
 
 std::string generateWord(std::vector<int> calcStartDist, std::vector<std::vector<int>> calcSecondDist, std::vector<int> calcWordLengthDist);
-std::vector<int> calcStartDist(std::vector<string> text);
-std::vector<std::vector<int>> calcSecondDist(std::vector<string> text);
-std::vector<int> calcWordLengthDist(std::vector<string> text);
+std::vector<int> calcStartDist(std::vector<std::string> text);
+std::vector<std::vector<int>> calcSecondDist(std::vector<std::string> text);
+std::vector<int> calcWordLengthDist(std::vector<std::string> text);
 
 #endif //AAL_GENERATOR_H

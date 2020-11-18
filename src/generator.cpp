@@ -19,10 +19,10 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
     char alfabet[] = "abcdefghijklmnopqrstuvwxyz";
     int word_length[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
 
-    std::random_device device;
-    std::mt19937 engine(device()); // Seed the random number engine
-    std::discrete_distribution<> first_dist(first_letter_dist.begin(), first_letter_dist.end()); // Create the distribution
-    std::discrete_distribution<> length_dist(wordLength.begin(), wordLength.end());
+    random_device device;
+    mt19937 engine(device()); // Seed the random number engine
+    discrete_distribution<> first_dist(first_letter_dist.begin(), first_letter_dist.end()); // Create the distribution
+    discrete_distribution<> length_dist(wordLength.begin(), wordLength.end());
 
     string final_word;
     int random_letter_pos = first_dist(engine);
@@ -31,7 +31,7 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
     final_word.push_back(random_letter);
     for(int i = 1; i < random_length; ++i)
     {
-        std::discrete_distribution<> second_dist(second_letter_dist.at(random_letter_pos).begin(), second_letter_dist.at(random_letter_pos).end());
+        discrete_distribution<> second_dist(second_letter_dist.at(random_letter_pos).begin(), second_letter_dist.at(random_letter_pos).end());
         random_letter_pos = second_dist(engine);   
         random_letter = alfabet[random_letter_pos];
         final_word.push_back(random_letter);
@@ -50,7 +50,7 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
 vector<int> calcStartDist(vector<string> text)
 {
     vector<int> first_letter_dist(26, 0);
-    std::map<char, int> first_letter_map;
+    map<char, int> first_letter_map;
     for(unsigned int i = 0; i < text.size(); i++)
     {
         ++first_letter_map[text[i].at(0)];
@@ -89,7 +89,7 @@ vector<vector<int>> calcSecondDist(vector<string> text)
 
     }
 
-    std::map<string, int> second_letter_map;
+    map<string, int> second_letter_map;
     
     for(unsigned int i = 0; i < second_letters.size(); ++i)
     {
@@ -119,7 +119,7 @@ vector<vector<int>> calcSecondDist(vector<string> text)
 vector<int> calcWordLengthDist(vector<string> text)
 {
     vector<int> word_length_dist;
-    std::map<int, int> length_map;
+    map<int, int> length_map;
 
     for(unsigned int i = 0; i < text.size(); i++)
     {
@@ -127,7 +127,7 @@ vector<int> calcWordLengthDist(vector<string> text)
     }
 
     for(auto p : length_map) {
-        word_length.push_back(p.second);
+        word_length_dist.push_back(p.second);
     }
     return word_length_dist;
 }
