@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
 #include "../include/generator.h"
 
 using namespace std;
@@ -37,6 +38,27 @@ int main(int argc, char *argv[]){
         cout << "Table size:" << tableSize << endl;
     }
     */
+    
+    fstream file("pan-tadeusz-modified.txt", ios::in);
+    if(!file.good())
+    {
+        std::cout << "Cannot open file" << endl;
+        return -1;
+    }
+
+    vector<string> text; 
+    string word;
+
+    while(!file.eof())
+    {
+        file >> word;
+        text.push_back(word);
+    }
+
+    vector<int> first_letter_dist = calcStartDist(text);
+    vector<vector<int>> second_letter_dist = calcSecondDist(text);
+    vector<int> wordLength = calcWordLength(text);
+
 
     int TableSize = 11;
 
@@ -45,13 +67,17 @@ int main(int argc, char *argv[]){
     long int k;
     int k1;
 
+    /*
     // initialize vectors of probability for generator
     vector<float> startProbability (26, 0); // prob of first letter in word
     vector<vector<float>> nextProbability (26, vector<float>(27, 0));   // prob of letter after other letter
+    */
+    
+    
 
     // main loop - inserting to the hashTable
     for(int i = 0; i < TableSize; i++){
-        s = generateWord(startProbability, nextProbability);
+        s = generateWord(first_letter_dist, second_letter_dist, wordLength);
         k = hashFunction(s);
         k1 = (int)(k%TableSize);
 

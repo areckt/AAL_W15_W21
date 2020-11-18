@@ -7,8 +7,9 @@
 #ifndef AAL_GENERATOR_H
 #define AAL_GENERATOR_H
 
-std::string generateWord(std::vector<float> startProbability, std::vector<std::vector<float>> nextProbability);
-std::vector<float> calcStartProb(void);
-std::vector<std::vector<float>> calcNextProb(void);
+std::string generateWord(std::vector<int> calcStartDist, std::vector<std::vector<int>> calcSecondDist, std::vector<int> calcWordLengthDist);
+std::vector<int> calcStartDist(std::vector<string> text);
+std::vector<std::vector<int>> calcSecondDist(std::vector<string> text);
+std::vector<int> calcWordLengthDist(std::vector<string> text);
 
 #endif //AAL_GENERATOR_H
