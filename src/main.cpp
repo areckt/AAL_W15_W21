@@ -55,7 +55,7 @@ int main(int argc, char *argv[]){
         k = hashFunction(s);
         k1 = (int)(k%TableSize);
 
-        if(hashTable.at(k).length() != 0){  // if collision occurs
+        if(hashTable.at(k1).length() != 0){  // if collision occurs
             int k2 = PRIME - (k % PRIME);
             int new_k;
             for(int j = 1; true; j++){
