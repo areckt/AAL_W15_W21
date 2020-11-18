@@ -17,7 +17,7 @@ using namespace std;
 string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_letter_dist, vector<int> wordLength)
 {
     char alfabet[] = "abcdefghijklmnopqrstuvwxyz";
-    int word_length[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+    int word_length[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
 
     random_device device;
     mt19937 engine(device()); // Seed the random number engine
@@ -37,7 +37,7 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
         final_word.push_back(random_letter);
         
     }
-
+    //cout << "Generated: " << final_word << endl;
     return final_word;
     
 }
@@ -65,6 +65,7 @@ vector<int> calcStartDist(vector<string> text)
             }
         }
     }
+    cout << "[INFO] Calculated first_letter_dist" << endl;
     return first_letter_dist;
 }
 
@@ -112,7 +113,7 @@ vector<vector<int>> calcSecondDist(vector<string> text)
             }
         }
     }
-
+    cout << "[INFO] Calculated second_letter_dist" << endl;
     return second_letter_dist;
 }
 
@@ -129,6 +130,7 @@ vector<int> calcWordLengthDist(vector<string> text)
     for(auto p : length_map) {
         word_length_dist.push_back(p.second);
     }
+    cout << "[INFO] Calculated word_length_dist" << endl;
     return word_length_dist;
 }
 

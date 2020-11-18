@@ -6,8 +6,8 @@
 
 /*
  * UWAGI:
- * Słowo nie powinno byc dłuższe niż 13 znaków, trzeba to uwzględnić przy generowaniu losowych słów
- * Powód jest taki, że przy 14 znakach hash jest zbyt duży i "przekręca" się na ujemne wartości
+ * Bardzo ważne jest, by tableSize był liczbą pierwszą
+ * PRIME musi być liczbą pierwszą, koniecznie mniejszą od tableSize
  */
 
 #include <iostream>
@@ -18,7 +18,7 @@
 
 using namespace std;
 
-#define PRIME 7
+#define PRIME 53
 
 long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
     int g = 31;
@@ -26,7 +26,7 @@ long int hashFunction(string s){        // calculates hash, returns k (before mo
     for(char i : s){
         k = g * k + (int)i;
     }
-
+    if(k<0) k *= -1;
     return k;
 }
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]){
     }
     */
     
-    fstream file("pan-tadeusz-modified.txt", ios::in);
+    fstream file("../pan-tadeusz-modified.txt", ios::in);
     if(!file.good())
     {
         std::cout << "Cannot open file" << endl;
@@ -59,29 +59,22 @@ int main(int argc, char *argv[]){
     vector<vector<int>> second_letter_dist = calcSecondDist(text);
     vector<int> wordLength = calcWordLengthDist(text);
 
-
-    int TableSize = 11;
+    int TableSize = 1049;
 
     vector<string> hashTable (TableSize);
     string s;
     long int k;
     int k1;
 
-    /*
-    // initialize vectors of probability for generator
-    vector<float> startProbability (26, 0); // prob of first letter in word
-    vector<vector<float>> nextProbability (26, vector<float>(27, 0));   // prob of letter after other letter
-    */
-    
-    
-
     // main loop - inserting to the hashTable
     for(int i = 0; i < TableSize; i++){
         s = generateWord(first_letter_dist, second_letter_dist, wordLength);
         k = hashFunction(s);
+        cout << k << endl;
         k1 = (int)(k%TableSize);
 
         if(hashTable.at(k1).length() != 0){  // if collision occurs
+            //cout << "Collision at index " << k1 << "\twith word " << s << "\t- " << hashTable.at(k1) << " is already there" << endl;
             int k2 = PRIME - (k % PRIME);
             int new_k;
             for(int j = 1; true; j++){
@@ -92,6 +85,7 @@ int main(int argc, char *argv[]){
                     hashTable.at(new_k) = s;
                     break;
                 }
+                //else cout << "Collision at index " << new_k << "\twith word " << s << "\t- " << hashTable.at(new_k) << " is already there" << endl;
             }
         }
         else{   // if no collision occurs
@@ -99,6 +93,7 @@ int main(int argc, char *argv[]){
         }
     }
 
+    cout << endl;
     // print out content of hashTable
     for(const auto& i : hashTable){
         if(i.length() == 0) cout << "[-]" << endl;

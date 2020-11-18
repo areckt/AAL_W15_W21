@@ -6,15 +6,19 @@
 
 #IncludeRegexTransform: 
 
-/home/areckt/CLionProjects/AAL/include/hash.h
+/home/areckt/CLionProjects/AAL/include/generator.h
 
-/home/areckt/CLionProjects/AAL/src/main.cpp
+/home/areckt/CLionProjects/AAL/src/generator.cpp
 iostream
+-
+random
+-
+map
 -
 string
 -
 vector
 -
-../include/hash.h
-/home/areckt/CLionProjects/AAL/include/hash.h
+../include/generator.h
+/home/areckt/CLionProjects/AAL/include/generator.h
 
