@@ -57,7 +57,7 @@ int main(int argc, char *argv[]){
 
     vector<int> first_letter_dist = calcStartDist(text);
     vector<vector<int>> second_letter_dist = calcSecondDist(text);
-    vector<int> wordLength = calcWordLength(text);
+    vector<int> wordLength = calcWordLengthDist(text);
 
 
     int TableSize = 11;
