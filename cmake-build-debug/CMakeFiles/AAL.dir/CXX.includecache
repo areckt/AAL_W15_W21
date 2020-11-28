@@ -8,16 +8,14 @@
 
 /home/areckt/CLionProjects/AAL/include/generator.h
 
-/home/areckt/CLionProjects/AAL/src/generator.cpp
+/home/areckt/CLionProjects/AAL/src/main.cpp
 iostream
--
-random
--
-map
 -
 string
 -
 vector
+-
+fstream
 -
 ../include/generator.h
 /home/areckt/CLionProjects/AAL/include/generator.h

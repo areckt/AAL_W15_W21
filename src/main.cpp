@@ -20,13 +20,12 @@ using namespace std;
 
 #define PRIME 53
 
-long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
+unsigned long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
     int g = 31;
-    long int k = 0;
+    unsigned long int k = 0;
     for(char i : s){
         k = g * k + (int)i;
     }
-    if(k<0) k *= -1;
     return k;
 }
 
@@ -59,24 +58,23 @@ int main(int argc, char *argv[]){
     vector<vector<int>> second_letter_dist = calcSecondDist(text);
     vector<int> wordLength = calcWordLengthDist(text);
 
-    int TableSize = 1049;
+    unsigned int TableSize = 103;
 
     vector<string> hashTable (TableSize);
     string s;
-    long int k;
-    int k1;
+    unsigned long int k;
+    unsigned int k1;
 
     // main loop - inserting to the hashTable
     for(int i = 0; i < TableSize; i++){
         s = generateWord(first_letter_dist, second_letter_dist, wordLength);
         k = hashFunction(s);
-        cout << k << endl;
-        k1 = (int)(k%TableSize);
+        k1 = (int)(k % TableSize);
 
         if(hashTable.at(k1).length() != 0){  // if collision occurs
             //cout << "Collision at index " << k1 << "\twith word " << s << "\t- " << hashTable.at(k1) << " is already there" << endl;
-            int k2 = PRIME - (k % PRIME);
-            int new_k;
+            unsigned int k2 = PRIME - (k % PRIME);
+            unsigned int new_k;
             for(int j = 1; true; j++){
                 new_k = (k1 + j*k2) % TableSize;
 

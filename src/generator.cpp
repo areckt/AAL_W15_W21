@@ -17,7 +17,7 @@ using namespace std;
 string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_letter_dist, vector<int> wordLength)
 {
     char alfabet[] = "abcdefghijklmnopqrstuvwxyz";
-    int word_length[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
+    int word_length[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
 
     random_device device;
     mt19937 engine(device()); // Seed the random number engine
