@@ -11,5 +11,6 @@ std::wstring generateWord(std::vector<int> calcStartDist, std::vector<std::vecto
 std::vector<int> calcStartDist(std::vector<std::wstring> text);
 std::vector<std::vector<int>> calcSecondDist(std::vector<std::wstring> text);
 std::vector<int> calcWordLengthDist(std::vector<std::wstring> text);
+std::wstring cleanText(std::wstring text);
 
 #endif //AAL_GENERATOR_H
