@@ -56,7 +56,7 @@ int main(int argc, char *argv[]){
     wstring cleaned_word;
     wstringstream stream1;
     wstringstream stream2;
-    wss << file.rdbuf();
+    stream1 << file.rdbuf();
     
 
     while(stream1 >> word)
