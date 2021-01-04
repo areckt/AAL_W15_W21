@@ -42,8 +42,7 @@ int main(int argc, char *argv[]){
     }
     */
     
-    setlocale( LC_ALL, "C.UTF-8" );
-    wifstream file("pan-tadeusz.txt");
+    wifstream file("out.txt");
     file.imbue(std::locale("C.UTF-8"));
     if(!file.good())
     {
@@ -52,21 +51,11 @@ int main(int argc, char *argv[]){
     }
     
     vector<wstring> text;
-    wstring word;
-    wstring cleaned_word;
-    wstringstream stream1;
-    wstringstream stream2;
-    stream1 << file.rdbuf();
-    
+    wstring word;    
 
-    while(stream1 >> word)
+    while(!file.eof())
     {
-        cleaned_word = cleanText(word) + L' ';
-        stream2 << cleaned_word;
-    }
-
-    while(stream2 >> word)
-    {
+        file >> word;
         text.push_back(word);
     }
 
