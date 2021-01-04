@@ -1,96 +1,101 @@
-/*
- * Arkadiusz Dawid,     300199
- * Illia Yatskevich,    302211
- * Projekt AAL W15 W21 - Tablica mieszajaca
- */
-
-/*
-    KOMPILACJA:     g++ utility.cpp -o prog -licuuc -licuio -licui18n
-    URUCHOMIENIE:   ./prog < in.txt > out.txt
-*/
-
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <sstream>
+#include <locale>
 #include <vector>
-#include <unicode/utypes.h>
-#include <unicode/unistr.h>
-#include <unicode/translit.h>
 
 using namespace std;
 
-string desaxUTF8(const string& str) {
-    // UTF-8 string -> UTF-16 UnicodeString
-    UnicodeString source = UnicodeString::fromUTF8(StringPiece(str));
-
-    // Transliterate UTF-16 UnicodeString
-    UErrorCode status = U_ZERO_ERROR;
-    Transliterator *accentsConverter = Transliterator::createInstance(
-            "NFD; [:M:] Remove; NFC", UTRANS_FORWARD, status);
-    accentsConverter->transliterate(source);
-
-    // UTF-16 UnicodeString -> UTF-8 std::string
-    std::string result;
-    source.toUTF8String(result);
-
-    return result;
-}
-
-string toLowerCase(string s)
+wstring cleanText(wstring text)
 {
-    string result = s;
-    for (int i = 0; i < result.size(); i++)
-        if (result[i] >= 'A' && result[i] <= 'Z')
-            result[i] = tolower(result[i]);
-    return result;
-}
-
-string removePunctuation(string s){
-    string result = "";
-    for(int i = 0; i < s.length(); ++i){
-        if((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')){
-            result += s[i];
+    wstring final_text = text;
+    for(unsigned long i = 0; i < final_text.length(); ++i)
+    {
+        
+        switch (final_text.at(i))
+        {
+        case L'\x104':    
+        case L'\x105':
+        case L'\x0e1':
+            final_text.at(i) = 'a';
+            break;
+        case L'\x118':        
+        case L'\x119':
+            final_text.at(i) = 'e';
+            break;
+        case L'\x106':    
+        case L'\x107':
+            final_text.at(i) = 'c';
+            break;
+        case L'\x0d3':    
+        case L'\x0f3':
+            final_text.at(i) = 'o';
+            break;
+        case L'\x15a':    
+        case L'\x15b':
+            final_text.at(i) = 's';
+            break;
+        case L'\x17b':    
+        case L'\x17c':
+        case L'\x179':    
+        case L'\x17a':
+            final_text.at(i) = 'z';
+            break;
+        case L'\x141':    
+        case L'\x142':
+            final_text.at(i) = 'l';
+            break;
+        case L'\x143':    
+        case L'\x144':
+            final_text.at(i) = 'n';
+            break;                                
+        default:
+            
+            break;
         }
-    }
-    return result;
-}
 
-string transformLwithStroke(string temp){
-    string word = "";
-    for(int i = 0; i < temp.length(); ++i){
-        if( (((int)temp.at(i) == -59) && ((int)temp.at(i+1) == -126)) ||
-            (((int)temp.at(i) == -59) && ((int)temp.at(i+1) == -127))){
-            word += 'l';
-            i++;
+        if(!isalpha(final_text.at(i)))
+        {
+            final_text.at(i) = ' ';
         }
-        else{
-            word += temp.at(i);
+        if(isupper(final_text.at(i)))
+        {
+            final_text.at(i) += 32;
         }
-    }
-    return word;
-}
-
-int main(){
-
-    vector<string> text;
-    vector<string>::iterator iter;
-    string word;
-
-    while(cin >> word){
-
-        word = transformLwithStroke(word);  //transforms 'ł' and 'Ł' to 'l'
-        word = desaxUTF8(word);             //transforms other diacritics
-        word = removePunctuation(word);     //removes non-letters
-        word = toLowerCase(word);           //changes every letter to lower case
-
-        if(word.length() > 1)
-            text.push_back(word);
-
+        
     }
 
+    return final_text;
+} 
 
-    for(int i = 0; i < text.size(); ++i){
-        cout << text.at(i) << "\n";
+int main()
+{
+    setlocale( LC_ALL, "C.UTF-8" );
+    wifstream file("pan-tadeusz.txt");
+    wofstream out("out.txt");
+    file.imbue(std::locale("C.UTF-8"));
+    out.imbue(std::locale("C.UTF-8"));
+    if(!file.good())
+    {
+        std::cout << "Cannot open file" << endl;
+        return -1;
     }
+    
+    vector<wstring> text;
+    wstring word;
+    wstring cleaned_word;
+    wstringstream stream1;
+    wstringstream stream2;
+    stream1 << file.rdbuf();
+
+    while(stream1 >> word)
+    {
+        cleaned_word = cleanText(word) + L' ';
+        stream2 << cleaned_word;
+    }
+
+    out << stream2.rdbuf();
+
 
     return 0;
 }

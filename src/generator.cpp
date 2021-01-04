@@ -14,7 +14,7 @@
 using namespace std;
 
 
-string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_letter_dist, vector<int> wordLength)
+wstring generateWord(vector<int> first_letter_dist, vector<vector<int>> second_letter_dist, vector<int> wordLength)
 {
     char alfabet[] = "abcdefghijklmnopqrstuvwxyz";
     int word_length[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19};
@@ -24,7 +24,7 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
     discrete_distribution<> first_dist(first_letter_dist.begin(), first_letter_dist.end()); // Create the distribution
     discrete_distribution<> length_dist(wordLength.begin(), wordLength.end());
 
-    string final_word;
+    wstring final_word;
     int random_letter_pos = first_dist(engine);
     int random_length = word_length[length_dist(engine)];
     char random_letter = alfabet[random_letter_pos];
@@ -47,7 +47,7 @@ string generateWord(vector<int> first_letter_dist, vector<vector<int>> second_le
 // Poniżej są funkcje, które mają wyliczyć tablice prawdopodobieństw wystąpienia danych liter
 // Zakładamy, że powinny to zrobić tylko raz na początku działania programu
 
-vector<int> calcStartDist(vector<string> text)
+vector<int> calcStartDist(vector<wstring> text)
 {
     vector<int> first_letter_dist(26, 0);
     map<char, int> first_letter_map;
@@ -70,11 +70,11 @@ vector<int> calcStartDist(vector<string> text)
 }
 
 
-vector<vector<int>> calcSecondDist(vector<string> text)
+vector<vector<int>> calcSecondDist(vector<wstring> text)
 {
     vector<vector<int>> second_letter_dist(26, vector<int>(26, 0));
-    vector<string> second_letters;
-    string next_letter;
+    vector<wstring> second_letters;
+    wstring next_letter;
     for(unsigned int i = 0; i < text.size(); ++i)
     {
         if(text.at(i).length() > 1)
@@ -90,7 +90,7 @@ vector<vector<int>> calcSecondDist(vector<string> text)
 
     }
 
-    map<string, int> second_letter_map;
+    map<wstring, int> second_letter_map;
     
     for(unsigned int i = 0; i < second_letters.size(); ++i)
     {
@@ -117,7 +117,7 @@ vector<vector<int>> calcSecondDist(vector<string> text)
     return second_letter_dist;
 }
 
-vector<int> calcWordLengthDist(vector<string> text)
+vector<int> calcWordLengthDist(vector<wstring> text)
 {
     vector<int> word_length_dist;
     map<int, int> length_map;

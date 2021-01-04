@@ -6,26 +6,30 @@
 
 /*
  * UWAGI:
- * Bardzo ważne jest, by tableSize był liczbą pierwszą
- * PRIME musi być liczbą pierwszą, koniecznie mniejszą od tableSize
+ * Słowo nie powinno byc dłuższe niż 13 znaków, trzeba to uwzględnić przy generowaniu losowych słów
+ * Powód jest taki, że przy 14 znakach hash jest zbyt duży i "przekręca" się na ujemne wartości
  */
 
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <locale>
+#include <algorithm>
 #include "../include/generator.h"
 
 using namespace std;
 
-#define PRIME 53
+#define PRIME 7
 
-unsigned long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
+long int hashFunction(wstring s){        // calculates hash, returns k (before modulo TableSize)
     int g = 31;
-    unsigned long int k = 0;
+    long int k = 0;
     for(char i : s){
         k = g * k + (int)i;
     }
+
     return k;
 }
 
@@ -38,15 +42,16 @@ int main(int argc, char *argv[]){
     }
     */
     
-    fstream file("../util/out.txt", ios::in);
+    wifstream file("out.txt");
+    file.imbue(std::locale("C.UTF-8"));
     if(!file.good())
     {
         std::cout << "Cannot open file" << endl;
         return -1;
     }
-
-    vector<string> text; 
-    string word;
+    
+    vector<wstring> text;
+    wstring word;    
 
     while(!file.eof())
     {
@@ -58,23 +63,31 @@ int main(int argc, char *argv[]){
     vector<vector<int>> second_letter_dist = calcSecondDist(text);
     vector<int> wordLength = calcWordLengthDist(text);
 
-    unsigned int TableSize = 103;
 
-    vector<string> hashTable (TableSize);
-    string s;
-    unsigned long int k;
-    unsigned int k1;
+    int TableSize = 11;
+
+    vector<wstring> hashTable (TableSize);
+    wstring s;
+    long int k;
+    int k1;
+
+    /*
+    // initialize vectors of probability for generator
+    vector<float> startProbability (26, 0); // prob of first letter in word
+    vector<vector<float>> nextProbability (26, vector<float>(27, 0));   // prob of letter after other letter
+    */
+    
+    
 
     // main loop - inserting to the hashTable
     for(int i = 0; i < TableSize; i++){
         s = generateWord(first_letter_dist, second_letter_dist, wordLength);
         k = hashFunction(s);
-        k1 = (int)(k % TableSize);
+        k1 = (int)(k%TableSize);
 
         if(hashTable.at(k1).length() != 0){  // if collision occurs
-            //cout << "Collision at index " << k1 << "\twith word " << s << "\t- " << hashTable.at(k1) << " is already there" << endl;
-            unsigned int k2 = PRIME - (k % PRIME);
-            unsigned int new_k;
+            int k2 = PRIME - (k % PRIME);
+            int new_k;
             for(int j = 1; true; j++){
                 new_k = (k1 + j*k2) % TableSize;
 
@@ -83,7 +96,6 @@ int main(int argc, char *argv[]){
                     hashTable.at(new_k) = s;
                     break;
                 }
-                //else cout << "Collision at index " << new_k << "\twith word " << s << "\t- " << hashTable.at(new_k) << " is already there" << endl;
             }
         }
         else{   // if no collision occurs
@@ -91,11 +103,10 @@ int main(int argc, char *argv[]){
         }
     }
 
-    cout << endl;
     // print out content of hashTable
     for(const auto& i : hashTable){
         if(i.length() == 0) cout << "[-]" << endl;
-        else cout << i << endl;
+        else wcout << i << endl;
     }
 
     return 0;
