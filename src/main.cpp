@@ -50,15 +50,6 @@ int main(int argc, char *argv[]){
         std::cout << "Cannot open file" << endl;
         return -1;
     }
-
-    vector<string> text; 
-    string word;
-
-    while(!file.eof())
-    {
-        file >> word;
-        text.push_back(word);
-    }
     
     vector<wstring> text;
     wstring word;
@@ -86,7 +77,7 @@ int main(int argc, char *argv[]){
 
     int TableSize = 11;
 
-    vector<string> hashTable (TableSize);
+    vector<wstring> hashTable (TableSize);
     wstring s;
     long int k;
     int k1;
@@ -126,7 +117,7 @@ int main(int argc, char *argv[]){
     // print out content of hashTable
     for(const auto& i : hashTable){
         if(i.length() == 0) cout << "[-]" << endl;
-        else cout << i << endl;
+        else wcout << i << endl;
     }
 
     return 0;
