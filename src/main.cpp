@@ -14,13 +14,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <sstream>
+#include <locale>
+#include <algorithm>
 #include "../include/generator.h"
 
 using namespace std;
 
 #define PRIME 7
 
-long int hashFunction(string s){        // calculates hash, returns k (before modulo TableSize)
+long int hashFunction(wstring s){        // calculates hash, returns k (before modulo TableSize)
     int g = 31;
     long int k = 0;
     for(char i : s){
@@ -39,7 +42,9 @@ int main(int argc, char *argv[]){
     }
     */
     
-    fstream file("pan-tadeusz-modified.txt", ios::in);
+    setlocale( LC_ALL, "C.UTF-8" );
+    wifstream file("pan-tadeusz.txt");
+    file.imbue(std::locale("C.UTF-8"));
     if(!file.good())
     {
         std::cout << "Cannot open file" << endl;
@@ -54,6 +59,25 @@ int main(int argc, char *argv[]){
         file >> word;
         text.push_back(word);
     }
+    
+    vector<wstring> text;
+    wstring word;
+    wstring cleaned_word;
+    wstringstream stream1;
+    wstringstream stream2;
+    wss << file.rdbuf();
+    
+
+    while(stream1 >> word)
+    {
+        cleaned_word = cleanText(word) + L' ';
+        stream2 << cleaned_word;
+    }
+
+    while(stream2 >> word)
+    {
+        text.push_back(word);
+    }
 
     vector<int> first_letter_dist = calcStartDist(text);
     vector<vector<int>> second_letter_dist = calcSecondDist(text);
@@ -63,7 +87,7 @@ int main(int argc, char *argv[]){
     int TableSize = 11;
 
     vector<string> hashTable (TableSize);
-    string s;
+    wstring s;
     long int k;
     int k1;
 
