@@ -54,6 +54,21 @@ string removePunctuation(string s){
     return result;
 }
 
+string transformLwithStroke(string temp){
+    string word = "";
+    for(int i = 0; i < temp.length(); ++i){
+        if( (((int)temp.at(i) == -59) && ((int)temp.at(i+1) == -126)) ||
+            (((int)temp.at(i) == -59) && ((int)temp.at(i+1) == -127))){
+            word += 'l';
+            i++;
+        }
+        else{
+            word += temp.at(i);
+        }
+    }
+    return word;
+}
+
 int main(){
 
     vector<string> text;
@@ -62,9 +77,10 @@ int main(){
 
     while(cin >> word){
 
-        word = desaxUTF8(word);         //transforms 'ą' to 'a', 'ż' to 'z', etc.
-        word = removePunctuation(word); //removes non-letters
-        word = toLowerCase(word);       //changes every letter to lower case
+        word = transformLwithStroke(word);  //transforms 'ł' and 'Ł' to 'l'
+        word = desaxUTF8(word);             //transforms other diacritics
+        word = removePunctuation(word);     //removes non-letters
+        word = toLowerCase(word);           //changes every letter to lower case
 
         if(word.length() > 1)
             text.push_back(word);

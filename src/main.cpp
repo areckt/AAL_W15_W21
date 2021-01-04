@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
     }
     */
     
-    fstream file("../pan-tadeusz-modified.txt", ios::in);
+    fstream file("../util/out.txt", ios::in);
     if(!file.good())
     {
         std::cout << "Cannot open file" << endl;
