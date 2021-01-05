@@ -4,12 +4,6 @@
  * Projekt AAL W15 W21 - Tablica mieszajaca
  */
 
-/*
- * UWAGI:
- * Słowo nie powinno byc dłuższe niż 13 znaków, trzeba to uwzględnić przy generowaniu losowych słów
- * Powód jest taki, że przy 14 znakach hash jest zbyt duży i "przekręca" się na ujemne wartości
- */
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,9 +17,9 @@ using namespace std;
 
 #define PRIME 7
 
-long int hashFunction(wstring s){        // calculates hash, returns k (before modulo TableSize)
+unsigned long int hashFunction(wstring s){  // calculates hash, returns k (before modulo TableSize)
     int g = 31;
-    long int k = 0;
+    unsigned long int k = 0;
     for(char i : s){
         k = g * k + (int)i;
     }
@@ -42,7 +36,7 @@ int main(int argc, char *argv[]){
     }
     */
     
-    wifstream file("out.txt");
+    wifstream file("../util/out.txt");
     file.imbue(std::locale("C.UTF-8"));
     if(!file.good())
     {
@@ -68,8 +62,8 @@ int main(int argc, char *argv[]){
 
     vector<wstring> hashTable (TableSize);
     wstring s;
-    long int k;
-    int k1;
+    unsigned long int k;
+    unsigned int k1;
 
     /*
     // initialize vectors of probability for generator
@@ -83,11 +77,11 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < TableSize; i++){
         s = generateWord(first_letter_dist, second_letter_dist, wordLength);
         k = hashFunction(s);
-        k1 = (int)(k%TableSize);
+        k1 = (unsigned int)(k%TableSize);
 
         if(hashTable.at(k1).length() != 0){  // if collision occurs
-            int k2 = PRIME - (k % PRIME);
-            int new_k;
+            unsigned int k2 = PRIME - (k % PRIME);
+            unsigned int new_k;
             for(int j = 1; true; j++){
                 new_k = (k1 + j*k2) % TableSize;
 

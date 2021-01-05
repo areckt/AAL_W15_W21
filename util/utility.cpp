@@ -1,3 +1,9 @@
+/*
+ * Arkadiusz Dawid,     300199
+ * Illia Yatskevich,    302211
+ * Projekt AAL W15 W21 - Tablica mieszajaca
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
