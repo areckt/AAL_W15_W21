@@ -20,83 +20,101 @@ using namespace std;
 
 unsigned long int hashFunction(wstring s);
 void displayHelp();
+void putIntoHashTable(vector<wstring> &hashTable, wstring s, int tableSize, unsigned long int k, unsigned int k1);
+void printHashTable(vector<wstring> &hashTable);
 
 int main(int argc, char *argv[]){
 
-     if(argc > 1){
-         string arg1 = argv[1];
-         if(arg1[0] == 'h'){
+    string mode, inputFile, outputFile;
+    int tableSize;
+
+    if(argc == 2 || argc == 3 || argc == 5){
+         mode = argv[1];
+         if(mode[0] == 'h'){
              displayHelp();
              return 0;
          }
-         //const int tableSize = stoi(argv[1], nullptr, 10);
+
+         tableSize = stoi(argv[2], nullptr, 10);
+         if(argc == 5){
+             inputFile = argv[3];
+             outputFile = argv[4];
+         }
+
          for(int i = 0; i < argc; ++i) {
              cout << "Argument " << i << "\t" << argv[i] << endl;
         }
      }
-     else{
-         cout << "Error: no parameters given\nIf you need help, try ./prog h" << endl;
+    else{
+         cout << "Error: invalid number of parameters given\nIf you need help, try ./prog h" << endl;
          return -1;
-     }
-    
-    wifstream file("../util/out.txt");
-    file.imbue(std::locale("C.UTF-8"));
-    if(!file.good())
-    {
-        std::cout << "Cannot open file" << endl;
-        return -1;
-    }
-    
-    vector<wstring> text;
-    wstring word;    
-
-    while(!file.eof())
-    {
-        file >> word;
-        text.push_back(word);
     }
 
-    vector<int> first_letter_dist = calcStartDist(text);
-    vector<vector<int>> second_letter_dist = calcSecondDist(text);
-    vector<int> wordLength = calcWordLengthDist(text);
-
-    int TableSize = 11;
-
-    vector<wstring> hashTable (TableSize);
+    vector<wstring> hashTable (tableSize);
     wstring s;
     unsigned long int k;
     unsigned int k1;
 
 
-    // main loop - inserting to the hashTable
-    for(int i = 0; i < TableSize; i++){
-        s = generateWord(first_letter_dist, second_letter_dist, wordLength);
-        k = hashFunction(s);
-        k1 = (unsigned int)(k%TableSize);
+    /*
+     * ##  MODE 1  ##
+     */
 
-        if(hashTable.at(k1).length() != 0){  // if collision occurs
-            unsigned int k2 = PRIME - (k % PRIME);
-            unsigned int new_k;
-            for(int j = 1; true; j++){
-                new_k = (k1 + j*k2) % TableSize;
+    if(mode == "t1"){
 
-                //check for collision
-                if(hashTable.at(new_k).length() == 0){
-                    hashTable.at(new_k) = s;
-                    break;
-                }
+        for(int i = 0; i < tableSize; ++i){
+            cout << "Type in word: ";
+            wcin >> s;
+
+            if(s.at(0) == '0'){
+                break;
             }
+
+            putIntoHashTable(hashTable, s, tableSize, k, k1);
         }
-        else{   // if no collision occurs
-            hashTable.at(k1) = s;
-        }
+
+        printHashTable(hashTable);
+        return 0;
+
     }
 
-    // print out content of hashTable
-    for(const auto& i : hashTable){
-        if(i.length() == 0) cout << "[-]" << endl;
-        else wcout << i << endl;
+
+    /*
+     * ##  MODE 2  ##
+     */
+
+    if(mode == "t2"){
+        wifstream file(inputFile);
+        file.imbue(std::locale("C.UTF-8"));
+        if(!file.good())
+        {
+            std::cout << "Cannot open file" << endl;
+            return -1;
+        }
+
+        vector<wstring> text;
+        wstring word;
+
+        while(!file.eof())
+        {
+            file >> word;
+            text.push_back(word);
+        }
+
+        vector<int> first_letter_dist = calcStartDist(text);
+        vector<vector<int>> second_letter_dist = calcSecondDist(text);
+        vector<int> wordLength = calcWordLengthDist(text);
+
+        for(int i = 0; i < tableSize; i++){
+            s = generateWord(first_letter_dist, second_letter_dist, wordLength);
+            putIntoHashTable(hashTable, s, tableSize, k, k1);
+        }
+
+        printHashTable(hashTable);
+        return 0;
+
     }
+
 
     return 0;
 }
@@ -125,4 +143,37 @@ void displayHelp(){
 
     cout << "3) ./prog h\n";
     cout << "Show this help message.\n";
+}
+
+void putIntoHashTable(vector<wstring> &hashTable, wstring s, int tableSize, unsigned long int k, unsigned int k1){
+    k = hashFunction(s);
+    k1 = (unsigned int)(k%tableSize);
+
+    if(hashTable.at(k1).length() != 0){  // if collision occurs
+        unsigned int k2 = PRIME - (k % PRIME);
+        unsigned int new_k;
+        for(int j = 1; true; j++){
+            new_k = (k1 + j*k2) % tableSize;
+
+            //check for collision
+            if(hashTable.at(new_k).length() == 0){
+                hashTable.at(new_k) = s;
+                break;
+            }
+        }
+    }
+    else{   // if no collision occurs
+        hashTable.at(k1) = s;
+    }
+}
+
+void printHashTable(vector<wstring> &hashTable){
+
+    cout << "\nINDEX\tCONTENT\n";
+    int index = 0;
+    for(const auto& i : hashTable){
+        if(i.length() == 0) cout << index << "\t\t[-]" << endl;
+        else wcout << index << "\t\t" << i << endl;
+        ++index;
+    }
 }
