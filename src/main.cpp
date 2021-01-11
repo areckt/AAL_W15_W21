@@ -19,17 +19,18 @@ using namespace std;
 
 #define PRIME 7
 
-unsigned long int hashFunction(wstring s);
+unsigned long int hashFunction(const wstring& s);
 void displayHelp();
-void putIntoHashTable(vector<wstring> &hashTable, wstring s, int tableSize, unsigned long int k, unsigned int k1);
+void putIntoHashTable(vector<wstring> &hashTable, const wstring& s, int tableSize, unsigned long int k, unsigned int k1);
 void printHashTable(vector<wstring> &hashTable);
 
 int main(int argc, char *argv[]){
 
     string mode, inputFile, outputFile;
     int tableSize, repetitions;
+    float loadFactor;
 
-    if(argc == 2 || argc == 3 || argc == 6){
+    if(argc == 2 || argc == 3 || argc == 7){
          mode = argv[1];
          if(mode[0] == 'h'){
              displayHelp();
@@ -37,10 +38,11 @@ int main(int argc, char *argv[]){
          }
 
          tableSize = stoi(argv[2], nullptr, 10);
-         if(argc == 6){
+         if(argc == 7){
              inputFile = argv[3];
              outputFile = argv[4];
              repetitions = stoi(argv[5], nullptr, 10);
+             loadFactor = ((float)stoi(argv[6], nullptr, 10))/100;
          }
      }
     else{
@@ -102,7 +104,7 @@ int main(int argc, char *argv[]){
             std::cout << "Cannot open outputFile" << endl;
             return -1;
         }
-        fileOut << "Measurement parameters:\ttableSize: " << tableSize << "\tRepetitions: " << repetitions << "\n";
+        fileOut << "Measurement parameters:\ttableSize: " << tableSize << "\tRepetitions: " << repetitions << "\tloadFactor: " << loadFactor << "\tPRIME: " << PRIME << "\n";
 
         size_t elapsedNano;
         float elapsedMilli, avgElapsedMilli = 0;
@@ -112,7 +114,7 @@ int main(int argc, char *argv[]){
             hashTable = vector<wstring>(tableSize); // resets hashTable
             elapsedNano = 0;
 
-            for (int i = 0; i < tableSize; i++) {
+            for (int i = 0; i < (int)(tableSize*loadFactor); i++) {
                 s = generateWord(first_letter_dist, second_letter_dist, wordLength);
                 Benchmark<std::chrono::nanoseconds> b;  // Start measuring time
                 putIntoHashTable(hashTable, s, tableSize, k, k1);
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]){
             elapsedMilli = (float)(elapsedNano)/1000000;
             avgElapsedMilli += elapsedMilli;
             fileOut << "Milliseconds:\t" << setprecision(2) << fixed << elapsedMilli << "\t\tNanoseconds:\t" << elapsedNano << "\n";
-
+            cout << "Repetition " << r+1 << " done\n";
         }
         avgElapsedMilli /= (float)repetitions;
         fileOut << "Average time in ms:\t" << avgElapsedMilli << "\n\n";
@@ -134,7 +136,7 @@ int main(int argc, char *argv[]){
     return 0;
 }
 
-unsigned long int hashFunction(wstring s){  // calculates hash, returns k (before modulo TableSize)
+unsigned long int hashFunction(const wstring& s){  // calculates hash, returns k (before modulo TableSize)
     int g = 31;
     unsigned long int k = 0;
     for(char i : s){
@@ -149,18 +151,21 @@ void displayHelp(){
 
     cout << "1) ./prog t1 tableSize\n";
     cout << "It allows you to manually type in words for hashTable.\ntableSize should be a small prime number.\n";
-    cout << "You can type in '0' to stop. At the end, content of hashTable will be displayed\n\n";
+    cout << "You can type in '0' to stop. At the end, content of hashTable will be displayed\n";
+    cout << "Example:\t./prog t1 11\n\n";
 
-    cout << "2) ./prog t2 tableSize in.txt out.txt repetitions\n";
+    cout << "2) ./prog t2 tableSize in.txt out.txt repetitions loadFactor\n";
     cout << "It will generate random words based on a text from in.txt and put them in hashTable.\n";
     cout << "The time measurements will be done repetitions-times and saved to out.txt.\n";
-    cout << "tableSize should be a prime number from the range 1 - 2147483647\n\n";
+    cout << "loadFactor indicates what percentage will be the hashTable filled in and should be an integer from the range 1-100\n";
+    cout << "tableSize should be a prime number from the range 1 - 2147483647\n";
+    cout << "Example:\t./prog 10007 ../util/out.txt ../util/result.txt 10 50\n\n";
 
     cout << "3) ./prog h\n";
-    cout << "Show this help message.\n";
+    cout << "Shows this help message.\n";
 }
 
-void putIntoHashTable(vector<wstring> &hashTable, wstring s, int tableSize, unsigned long int k, unsigned int k1){
+void putIntoHashTable(vector<wstring> &hashTable, const wstring& s, int tableSize, unsigned long int k, unsigned int k1){
     k = hashFunction(s);
     k1 = (unsigned int)(k%tableSize);
 
