@@ -17,7 +17,7 @@
 
 using namespace std;
 
-#define PRIME 7
+#define PRIME 24001
 
 unsigned long int hashFunction(const wstring& s);
 void displayHelp();
@@ -31,23 +31,23 @@ int main(int argc, char *argv[]){
     float loadFactor;
 
     if(argc == 2 || argc == 3 || argc == 7){
-         mode = argv[1];
-         if(mode[0] == 'h'){
-             displayHelp();
-             return 0;
-         }
+        mode = argv[1];
+        if(mode[0] == 'h'){
+            displayHelp();
+            return 0;
+        }
 
-         tableSize = stoi(argv[2], nullptr, 10);
-         if(argc == 7){
-             inputFile = argv[3];
-             outputFile = argv[4];
-             repetitions = stoi(argv[5], nullptr, 10);
-             loadFactor = ((float)stoi(argv[6], nullptr, 10))/100;
-         }
-     }
+        tableSize = stoi(argv[2], nullptr, 10);
+        if(argc == 7){
+            inputFile = argv[3];
+            outputFile = argv[4];
+            repetitions = stoi(argv[5], nullptr, 10);
+            loadFactor = ((float)stoi(argv[6], nullptr, 10))/100;
+        }
+    }
     else{
-         cout << "Error: invalid number of parameters given\nIf you need help, try ./prog h" << endl;
-         return -1;
+        cout << "Error: invalid number of parameters given\nIf you need help, try ./prog h" << endl;
+        return -1;
     }
 
     vector<wstring> hashTable (tableSize);
@@ -159,7 +159,7 @@ void displayHelp(){
     cout << "The time measurements will be done repetitions-times and saved to out.txt.\n";
     cout << "loadFactor indicates what percentage will be the hashTable filled in and should be an integer from the range 1-100\n";
     cout << "tableSize should be a prime number from the range 1 - 2147483647\n";
-    cout << "Example:\t./prog 10007 ../util/out.txt ../util/result.txt 10 50\n\n";
+    cout << "Example:\t./prog t2 10007 ../util/out.txt ../util/result.txt 10 50\n\n";
 
     cout << "3) ./prog h\n";
     cout << "Shows this help message.\n";
@@ -191,9 +191,16 @@ void printHashTable(vector<wstring> &hashTable){
 
     cout << "\nINDEX\tCONTENT\n";
     int index = 0;
+    unsigned int sum = 0;
+    unsigned int wordCount = 0;
     for(const auto& i : hashTable){
-        if(i.length() == 0) cout << index << "\t\t[-]" << endl;
-        else wcout << index << "\t\t" << i << endl;
+        if(i.length() == 0) cout << index << "\t\t[-]" << "\n";
+        else{
+            wcout << index << "\t\t" << i << "\n";
+            ++wordCount;
+            sum += i.length();
+        }
         ++index;
     }
+    cout << "AVERAGE WORD LENGTH: " << float(sum)/float(wordCount) << "\n";
 }
