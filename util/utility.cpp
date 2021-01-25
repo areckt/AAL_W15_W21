@@ -74,11 +74,23 @@ wstring cleanText(wstring text)
     return final_text;
 } 
 
-int main()
+int main(int argc, char *argv[])
 {
+    string inputFile, outputFile;
+
+    if(argc == 3){
+            inputFile = argv[1];
+            outputFile = argv[2];
+    }
+    else{
+        cout << "Error: invalid number of parameters given\nHint: ./util inputFile.txt outputFile.txt";
+        return 0;
+    }
+
+
     setlocale( LC_ALL, "C.UTF-8" );
-    wifstream file("pan-tadeusz.txt");
-    wofstream out("out.txt");
+    wifstream file(inputFile);
+    wofstream out(outputFile);
     file.imbue(std::locale("C.UTF-8"));
     out.imbue(std::locale("C.UTF-8"));
     if(!file.good())

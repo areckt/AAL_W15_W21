@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
     }
     else{
         cout << "Error: invalid number of parameters given\nIf you need help, try ./prog h" << endl;
-        return -1;
+        return 0;
     }
 
     vector<wstring> hashTable (tableSize);
